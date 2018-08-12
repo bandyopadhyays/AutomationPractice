@@ -21,6 +21,9 @@ public class PropertyFileReaderUtil {
 
 	}
 
+	/**
+	 * Non java doc -> method to read data from property file 
+	 */
 	public static String getPropertyvalue(String key) {
 		return prop.getProperty(key);
 }
