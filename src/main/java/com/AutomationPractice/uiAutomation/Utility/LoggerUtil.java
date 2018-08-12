@@ -7,6 +7,11 @@ public class LoggerUtil {
 
 	private static boolean root = false;
 
+	/**
+	 * Non Java doc -> utility method to create logger instance
+	 * @param clz
+	 * @return -> logger instance
+	 */
 	@SuppressWarnings("rawtypes")
 	public static Logger getLogger(Class clz) {
 		if (root) {
