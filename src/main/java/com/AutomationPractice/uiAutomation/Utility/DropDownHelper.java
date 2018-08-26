@@ -15,5 +15,10 @@ public class DropDownHelper {
 		Log.info("Locator : " + element + " Value : " + option);
 	}
 	
+	public static void selectByValue(WebElement element, String option) {
+		oSelect = new Select(element);
+		oSelect.selectByValue(option);
+		Log.info("Locator : " + element + " Value : " + option);
+	}
 	
 }
