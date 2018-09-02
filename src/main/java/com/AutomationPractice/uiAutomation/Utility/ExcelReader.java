@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,7 +17,7 @@ public class ExcelReader {
 	private static FileInputStream fis;
 	private static Workbook wb;
 	private static Row row;
-
+	private static Cell cell;
 	private static Sheet sheet;
 
 	static {
@@ -42,23 +42,48 @@ public class ExcelReader {
 					colIndex = i;
 				}
 			}
-
 			row = sheet.getRow(rowIndex);
-			if (row.getCell(colIndex).getCellTypeEnum() == CellType.NUMERIC) {
-				return String.valueOf(Integer.valueOf((int) row.getCell(colIndex).getNumericCellValue()));
-			} else {
-				return row.getCell(colIndex).getStringCellValue();
-			}
+			cell = row.getCell(colIndex);
+			if (cell.getCellTypeEnum() == CellType.STRING)
+				return cell.getStringCellValue();
+			else if (cell.getCellTypeEnum() == CellType.NUMERIC || getCellTypeEnum() == CellType.FORMULA) {
+				String cellValue = String.valueOf(cell.getNumericCellValue());
+				//System.out.println(cellValue);
+				if (cellValue.contains("E")) {
+					String[] cellStringval = cellValue.split("E");
+					
+					return cellStringval[0].replace(".", "");
+				} else if (cellValue.contains(".")){
+					String[] cellStringval = cellValue.split("\\."); //regx
+					return cellStringval[0];
+				} else {
+					return cellValue;
+				}
+			} else if (cell.getCellTypeEnum() == CellType.BLANK)
+				return "";
+			else
+				return String.valueOf(cell.getBooleanCellValue());
+			/**
+			 * if (row.getCell(colIndex).getCellTypeEnum() == CellType.NUMERIC) { return
+			 * String.valueOf(Integer.valueOf((int)
+			 * row.getCell(colIndex).getNumericCellValue())); } else { return
+			 * row.getCell(colIndex).getStringCellValue(); }
+			 */
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+		//return colName;
+	}
+
+	private static CellType getCellTypeEnum() {
+		return null;
 	}
 
 	/**
 	 * public static void main(String[] args) {
 	 * System.out.println(System.getProperty("user.dir"));
-	 * System.out.println(getDataFromExcel("Login_Data","UserID",1)); }
+	 * System.out.println(getDataFromExcel("Registration_Data","Mobile_No",1)); }
 	 **/
 
 }
